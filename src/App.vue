@@ -1,28 +1,384 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <div>
+        <div class="back-image" />
+        <div class="main">
+          <div class="menu">
+            <div class="container">
+              <div class="row">
+                <div class="col-7">
+                  <div
+                    v-for="tab in tabs"
+                    :key="tab"
+                    @click="changeMenu(tab)"
+                    :class="['manu__item', { 'manu__item--selected': selected === tab }]">
+                    {{ tab }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+          <div class="content">
+            <div class="container">
+              <div class="row">
+                <div class="col-7 col--no-padding">
+                  <div v-if="showViewAirly" class="informations informations__airly">
+                    <InformationsAirly />
+                  </div>
+                  <div v-else-if="showViewPg" class="informations informations__pg">
+                    <InformationsPg />
+                  </div>
+                  <div v-else-if="showViewComparison" class="informations informations__comparison">
+                   
+                  </div>
+                </div>
+                <div class="col-5 col--no-padding">
+                  <div class="map">
+                    <div id="map">
+                      <MapContainer />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import MapContainer from "./components/MapContainer";
+import InformationsAirly from "./components/InformationsAirly";
+import InformationsPg from "./components/InformationsPg";
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    MapContainer,
+    InformationsAirly,
+    InformationsPg,
+  },
+  data: function() {
+    return {
+      tabs: ["AIRLY", "PG", "PORÓWNANIE"],
+      selected: "airly",
+      showViewAirly: true,
+      showViewPg: false,
+      showViewComparison: false,
+    };
+  },
+  methods:{
+    changeMenu(name){
+        this.selected = name; 
+
+        this.showViewAirly = false;
+        this.showViewPg = false;
+        this.showViewComparison = false;
+
+        if(name == "AIRLY"){
+          this.showViewAirly = true;
+        }
+        else if(name == "PG"){
+          this.showViewPg = true;
+        }
+        else if(name == "PORÓWNANIE"){
+          this.showViewComparison = true;
+        }
+    },
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+
+
+
+
+
+
+
+
+$black: #000 !default;
+
+ul.tabs-nav {
+  list-style: none;
+  margin: 0px 0px 80px 0px;
 }
+
+ul.tabs-nav li {
+  display: inline-block;
+  margin: 0 40px 0 0;
+  border: 1px solid rgb(207, 178, 178);
+}
+
+ul.tabs-nav li a {
+  padding: 20px 40px;
+  display: inline-block;
+  text-decoration: none;
+  color: $black;
+}
+
+ul.tabs-nav li a:hover {
+  background: #f1f1f1;
+  text-decoration: none;
+}
+
+ul.tabs-nav li.active a {
+  background: #f1f1f1;
+  text-decoration: none;
+}
+
+.tabs-content {
+}
+
+.tabs-content div.tab-panel {
+  display: none;
+  visibility: hidden;
+}
+
+.tabs-content div.tab-panel.active {
+  display: block;
+  visibility: visible;
+}
+
+//App
+
+body {
+  margin: 0px;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+  font-family: Lato, sans-serif;
+  line-height: 1.5;
+}
+
+.container {
+  height: 100%;
+}
+
+.back-image {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-image: url("./images/back2.jpg");
+  background-size: cover;
+  opacity: 0.7;
+}
+
+.main {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+.col {
+  &--no-padding {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+}
+
+.title {
+  height: 100px;
+  text-align: center;
+  padding-top: 20px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
+
+  .title__top {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .title__bottom {
+    font-size: 17px;
+    color: #635e5e;
+  }
+}
+
+.menu {
+  height: 69px;
+  padding-top: 20px;
+  position: absolute;
+  top: 100px;
+  left: 0px;
+  right: 0px;
+
+  .manu__item {
+    float: left;
+    padding: 15px 20px;
+    background-color: #18e02a;
+    margin-left: 1%;
+    width: 32%;
+    text-align: center;
+    font-weight: bold;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    font-size: 13px;
+
+    &--selected {
+      border-top: 2px #18e02a solid;
+      border-left: 2px #18e02a solid;
+      border-right: 2px #18e02a solid;
+      background-color: #f9f2f3;
+    }
+
+    &--notification {
+      position: static;
+      float: right;
+      position: static;
+      float: right;
+      background-color: #f9f2f3;
+      width: 170px;
+      padding-top: 7px;
+    }
+  }
+}
+
+.content {
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 170px;
+  bottom: 0px;
+
+  .informations {
+    height: 421px;
+    background-color: #f9f2f3;
+    margin-right: 5px;
+    overflow-y: scroll;
+    position: relative;
+  }
+
+  .map {
+    height: 420px;
+    background-color: #e0e0e0;
+    width: 100%;
+  }
+}
+
+#map {
+  position: relative;
+  overflow: hidden;
+  height: 400px;
+  width: 100%;
+}
+
+.separator {
+  width: 100%;
+  border-bottom: 1px solid gray;
+}
+
+.informations__row {
+  padding: 15px;
+
+  &--rate {
+    height: 60px;
+    padding-top: 15px;
+  }
+
+  &--current {
+    height: 167px;
+    padding-top: 15px;
+  }
+}
+
+.row__title {
+  text-align: center;
+}
+
+.name__data {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.row {
+  height: 100%;
+}
+
+.row__rate-number{
+  float: left;
+  min-width: 30px;
+  padding: 3px;
+  text-align: center;
+  border: 2px #18e02a solid;
+  border-radius: 5px;
+  color: #18e02a;
+}
+
+.row__rate {
+  padding-left: 10px;
+  padding-top: 3px;
+  float: left;
+}
+
+.row__current {
+  &--half {
+    float: left;
+    width: 50%;
+  }
+}
+
+.row_name {
+  font-size: 18px;
+  font-weight: 800;
+  padding-bottom: 7px;
+}
+
+.current {
+  color: #585353;
+}
+
+.current__value {
+  font-weight: bold;
+  font-size: 20px;
+  color: black;
+}
+
+.current__unit {
+  font-size: 12px;
+}
+
+.historic__graph {
+  width: 100%;
+  height: 230px;
+}
+
+.row__menu-historic {
+  width: 100%;
+  height: 24px;
+  background-color: #e4dddd;
+}
+
+.menu-historic__item {
+  width: 33%;
+  float: left;
+  text-align: center;
+  border-top: 2px #ccc2c2 solid;
+
+  &--selected {
+    border-top: 2px #878d90 solid;
+    background-color: #f9f2f3;
+  }
+}
+
+.menu-prediction__item {
+  width: 50%;
+  float: left;
+  text-align: center;
+  border-top: 2px #ccc2c2 solid;
+
+  &--selected {
+    border-top: 2px #878d90 solid;
+    background-color: #f9f2f3;
+  }
+}
+
 </style>
