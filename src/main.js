@@ -3,6 +3,7 @@ import App from './App.vue'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import * as VueGoogleMaps from "vue2-google-maps";
+require('moment/locale/pl')
  
 Vue.config.productionTip = false
 

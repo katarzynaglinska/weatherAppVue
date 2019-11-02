@@ -24,7 +24,7 @@
               <div class="row">
                 <div class="col-7 col--no-padding">
                   <div v-if="showViewAirly" class="informations informations__airly">
-                    <InformationsAirly />
+                    <InformationsAirly :url="this.firstCityUrl" />
                   </div>
                   <div v-else-if="showViewPg" class="informations informations__pg">
                     <InformationsPg />
@@ -66,6 +66,8 @@ export default {
       showViewAirly: true,
       showViewPg: false,
       showViewComparison: false,
+      firstCityUrl: "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.37108&lng=18.61796&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y",
+      secondCityUrl: "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.5196057&lng=18.53524&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y",
     };
   },
   methods:{

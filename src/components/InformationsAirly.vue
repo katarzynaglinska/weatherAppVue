@@ -17,10 +17,10 @@
                     </div>
                 </div>
             </div>
-            <div v-if="chartType == 0 || chartType == 2">
+            <div v-if="chartTypeHistory == 0 || chartTypeHistory == 2">
                 <BarChart  :options="this.airlyChartDataHistory.options"  :chart-data="this.airlyChartDataHistory.data"/>
             </div>
-            <div v-else-if="chartType == 1">
+            <div v-else-if="chartTypeHistory == 1">
                 <LineChart  :options="this.airlyChartDataHistory.options"  :chart-data="this.airlyChartDataHistory.data"/>
             </div>
         </div>
@@ -29,19 +29,19 @@
             <div>
                 <div class="row__menu-historic">
                     <div
-                        v-for="tab in tabs"
+                        v-for="tab in tabsPrediction"
                         :key="tab"
-                        @click="changeMenu(tab)"
-                        :class="['menu-historic__item', { 'menu-historic__item--selected': selected === tab }]">
+                        @click="changeMenu(tab + 'Prediction')"
+                        :class="['menu-prediction__item', { 'menu-prediction__item--selected': selectedPrediction === tab + 'Prediction' }]">
                         {{ tab }}
                     </div>
                 </div>
             </div>
-            <div v-if="chartType == 0 || chartType == 2">
-                <BarChart  :options="this.airlyChartDataHistory.options"  :chart-data="this.airlyChartDataHistory.data"/>
+            <div v-if="chartTypePrediction == 3">
+                <BarChart  :options="this.airlyChartDataForecast.options"  :chart-data="this.airlyChartDataForecast.data"/>
             </div>
-            <div v-else-if="chartType == 1">
-                <LineChart  :options="this.airlyChartDataHistory.options"  :chart-data="this.airlyChartDataHistory.data"/>
+            <div v-else-if="chartTypePrediction == 4">
+                <LineChart  :options="this.airlyChartDataForecast.options"  :chart-data="this.airlyChartDataForecast.data"/>
             </div>
         </div>
         
@@ -96,32 +96,37 @@ export default {
             pressure: "",
             humidity: "",
             tabs: ["CAQI", "PM", "TEMPERATURA"],
+            tabsPrediction: ["CAQI", "PM"],
             selected: "CAQI",
-            showViewCaqui: true,
-            showViewPm: false,
-            showViewTemperature: false,
-            chartType: 0,
+            selectedPrediction: "CAQIPrediction",
+            chartTypeHistory: 0,
+            chartTypePrediction: 3,
         };
+    },
+    props: {
+        //url,
     },
     methods: {
         changeMenu(name){
-            this.selected = name; 
-
-            this.showViewCaqui = false;
-            this.showViewPm = false;
-            this.showViewTemperature = false;
-
             if(name == "CAQI"){
-                this.showViewCaqui = true;
                 this.changeChartData("0", "categoryMenuHistory");
+                this.selected = name;
             }
             else if(name == "PM"){
-                this.showViewPm = true;
                 this.changeChartData("1", "categoryMenuHistory");
+                this.selected = name;
             }
             else if(name == "TEMPERATURA"){
-                this.showViewTemperature = true;
                 this.changeChartData("2", "categoryMenuHistory");
+                this.selected = name;
+            }
+            else if(name == "CAQIPrediction"){
+                this.changeChartData("3", "categoryMenuPrediction");
+                this.selectedPrediction = name;
+            }
+            else if(name == "PMPrediction"){
+                this.changeChartData("4", "categoryMenuPrediction");
+                this.selectedPrediction = name;
             }
         },
         buildList: function(res){
@@ -192,6 +197,13 @@ export default {
                 false,
                 "airlyChartDataHistory"
             );
+            this.createChartSelected(
+                this.datasFromAirlyForecast,
+                this.caqiFromAirlyForecast,
+                false,
+                false,
+                "airlyChartDataForecast"
+            );
             this.setCurrentDataAirly();
         },
         setCurrentDataAirly(){
@@ -224,7 +236,7 @@ export default {
                     isLoaded: false
                 }
             } else {
-            this.airlyChartDataHistory= {
+                this.airlyChartDataHistory= {
                     isLoaded: false
                 }
             }
@@ -240,7 +252,7 @@ export default {
                         false,
                         "airlyChartDataHistory"
                     );
-                    this.chartType = 0;
+                    this.chartTypeHistory = 0;
                     console.log(this.airlyChartDataHistory);
                     break;
                 case "1":
@@ -251,7 +263,7 @@ export default {
                         true,
                         "airlyChartDataHistory"
                     );
-                    this.chartType = 1;
+                    this.chartTypeHistory = 1;
                     console.log(this.airlyChartDataHistory.data);
                     break;
                 case "2":
@@ -262,9 +274,29 @@ export default {
                         false,
                         "airlyChartDataHistory"
                     );
-                    this.chartType = 2;
-                    console.log(this.airlyChartDataHistory.data);
+                    this.chartTypeHistory = 2;
                     break;
+                case "3":
+                    this.createChartSelected(
+                    this.datasFromAirlyForecast,
+                    this.caqiFromAirlyForecast,
+                    false,
+                    false,
+                    "airlyChartDataForecast"
+                    );
+                    this.chartTypePrediction = 3;
+                    break;
+                case "4":
+                    this.createChartSelected(
+                    this.datasFromAirlyForecast,
+                    this.pm25ValuesFromAirlyForecast,
+                    this.pm10ValuesFromAirlyForecast,
+                    true,
+                    "airlyChartDataForecast"
+                    );
+                    this.chartTypePrediction = 4;
+                    break;
+                default: break;
             }
         },
         createChartSelected(labels, data, data2, display, chartType) {
@@ -321,8 +353,8 @@ export default {
                 isLoaded: true
                 }
             }
-
-            console.log(this.airlyChartDataHistory);
+            console.log("this.airlyChartDataForecast");
+            console.log(this.airlyChartDataForecast);
            /* if (chartType == "airlyChartDataHistory") {
             this.setState({ airlyChartDataHistoryChanged: true });
             } else if (chartType == "airlyChartDataForecast") {
@@ -334,7 +366,7 @@ export default {
         }
     },
     mounted: function(){
-        let url =
+        let url = //this.props.url;
             "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.37108&lng=18.61796&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
          axios.get(url)
             .then(response => {
