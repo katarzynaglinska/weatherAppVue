@@ -3,7 +3,6 @@
         <CurrentData :dayNameOfWeek="this.dayNameOfWeek" :dayDate="this.dayDate" :rate="this.rate"
                      :rateValue="this.rateValue" :pm10="this.pm10" :pm25="this.pm25" :pm1="this.pm1"
                      :temperature="this.temperature" :pressure="this.pressure" :humidity="this.humidity"/>
-        
         <div class="informations__row">
           <div class="row_name">Dane historyczne</div>
             <div>
@@ -103,8 +102,16 @@ export default {
             chartTypePrediction: 3,
         };
     },
-    props: {
-        //url,
+    props: ['url'],
+    watch: { 
+        url: function(newVal, oldVal) { 
+            let url = newVal;
+            axios.get(url)
+                .then(response => {
+                    this.buildList(response.data);
+                })
+                .catch(err => console.log(err))
+        }
     },
     methods: {
         changeMenu(name){
@@ -366,8 +373,9 @@ export default {
         }
     },
     mounted: function(){
-        let url = //this.props.url;
-            "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.37108&lng=18.61796&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
+        console.log("airly url " + this.url);
+        let url = this.url;
+            //"https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=54.37108&lng=18.61796&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
          axios.get(url)
             .then(response => {
                 this.buildList(response.data);
