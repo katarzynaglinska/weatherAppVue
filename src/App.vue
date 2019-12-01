@@ -64,11 +64,10 @@
                         </div>
                     </div>
                     <div class="separator"></div>
-                    <!--<InformationsPg :url="this.secondCityUrl"/>-->
                     <InformationsAirly :url="this.secondCityUrl" />
                   </div>
                   <div v-show="showViewComparison" class="informations informations__comparison">
-                   
+                    <Comparison :url="this.secondCityUrl" :url1="this.firstCityUrl" :url2="this.secondCityUrl" :firstCity="this.firstCityName" :secondCity="this.secondCityName" />
                   </div>
                 </div>
                 <div class="col-5 col--no-padding">
@@ -88,6 +87,7 @@
 import MapContainer from "./components/MapContainer";
 import InformationsAirly from "./components/InformationsAirly";
 import InformationsPg from "./components/InformationsPg";
+import Comparison from "./components/Comparison";
 
 export default {
   name: 'app',
@@ -95,6 +95,7 @@ export default {
     MapContainer,
     InformationsAirly,
     InformationsPg,
+    Comparison,
   },
   data: function() {
     return {
@@ -255,13 +256,12 @@ ul.tabs-nav li.active a {
 //App
 
 body{
-    margin: 0px;
-    padding: 0px;
-    height: 100%;
-    width: 100%;
-    font-family: Lato,sans-serif;
-    line-height: 1.5;
-    
+  margin: 0px !important;
+  padding: 0px;
+  height: 100%;
+  width: 100%;
+  font-family: Lato,sans-serif !important;
+  line-height: 1.5 !important;
 }
 
 .container{
@@ -291,8 +291,8 @@ body{
 
 .col{
     &--no-padding{
-        padding-right: 0px;
-        padding-left: 0px;
+        padding-right: 0px !important;
+        padding-left: 0px !important;
     }
 }
 
@@ -372,10 +372,6 @@ body{
         position: relative;
 
         &__second-city{
-            display: none;
-        }
-
-        &__comparison{
             display: none;
         }
     }
@@ -508,6 +504,22 @@ body{
     }
 }
 
+.menu-historic__item, .menu-historic-gdy__item, .menu-historic-comp__item{
+  width: 33%;
+  float: left;
+  text-align: center;
+  border-top: 2px #ccc2c2 solid;
+
+  &--selected{
+      border-top: 2px #878d90 solid;
+      background-color: #f9f2f3;
+  }
+
+  &--25{
+    width: 25%;
+  }
+}
+
 .menu-prediction__item, .menu-prediction-gdy__item{
     width: 50%;
     float: left;
@@ -519,6 +531,18 @@ body{
         background-color: #f9f2f3;
     }
 }
+
+.menu-prediction-comp__item{
+  width: 33.3%;
+  float: left;
+  text-align: center;
+  border-top: 2px #ccc2c2 solid;
+
+  &--selected{
+      border-top: 2px #878d90 solid;
+      background-color: #f9f2f3;
+  }
+}s
 
 #mapid{
     width: 100%; 
@@ -545,5 +569,6 @@ body{
 .choose-city-second{
     height: 35px;
 }
+
 
 </style>
