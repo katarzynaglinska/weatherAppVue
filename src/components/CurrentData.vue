@@ -2,7 +2,7 @@
   <div>
     <div class="informations__row">
       <div class="row__title">
-        <span class="name__data">AIRLY</span>&nbsp
+        <span class="name__data">{{ this.cityName }}</span>&nbsp
         <span class="current-date__day-name">{{ dayNameOfWeek }}</span
         >&nbsp
         <span class="current-date__day-date">{{ dayDate }}</span>
@@ -62,7 +62,8 @@ export default {
     "pm1",
     "temperature",
     "pressure",
-    "humidity"
+    "humidity",
+    "cityName"
   ]
 };
 </script>

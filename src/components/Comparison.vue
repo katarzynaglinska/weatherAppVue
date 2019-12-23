@@ -40,7 +40,7 @@
       </div>
     </div>
     <div class="informations__row">
-      <div class="row_name">Ekstrema ogólnej jakości powietrza (CAQUI)</div>
+      <div class="row_name">Ekstrema ogólnej jakości powietrza (CAQI)</div>
       <LineChart
         :height="200"
         :options="this.chartDataMinMax.options"

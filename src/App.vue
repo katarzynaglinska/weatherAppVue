@@ -23,10 +23,9 @@
                 v-for="tab in tabs"
                 :key="tab"
                 @click="changeMenu(tab)"
-                :class="[
+                 :class="[
                   'manu__item',
                   { 'manu__item--selected': selected === tab },
-                  { 'manu__item--selected': tab === 'GDAŃSK ' }
                 ]"
               >
                 {{ tab }}
@@ -61,7 +60,7 @@
                   </div>
                 </div>
                 <div class="separator"></div>
-                <InformationsCity :url="this.firstCityUrl" />
+                <InformationsCity :url="this.firstCityUrl" :cityName="this.firstCityName"/>
               </div>
               <div v-show="showViewSecondCity" class="informations informations__pg">
                 <div class="informations__row">
@@ -82,7 +81,7 @@
                   </div>
                 </div>
                 <div class="separator"></div>
-                <InformationsCity :url="this.secondCityUrl" />
+                <InformationsCity :url="this.secondCityUrl" :cityName="this.secondCityName" />
               </div>
               <div
                 v-show="showViewComparison"
@@ -129,7 +128,7 @@ export default {
   },
   data: function() {
     return {
-      selected: "airly",
+      selected: "GDAŃSK",
       showViewFirstCity: true,
       showViewSecondCity: false,
       showViewComparison: false,
@@ -143,16 +142,16 @@ export default {
       secondCityName: "GDYNIA",
       secondCityLat: 54.5196057,
       secondCityLng: 18.53524,
-      tabs: ["GDAŃSK ", "GDYNIA", "PORÓWNANIE"]
+      tabs: ["GDAŃSK", "GDYNIA", "PORÓWNANIE"]
     };
   },
   mounted() {
     document.getElementById("selectSecondCity").value = 1;
+    document.getElementsByClassName("manu__item")[0].classList.add("manu__item--selected");
   },
   methods: {
     changeMenu(name) {
       this.selected = name;
-
       this.showViewFirstCity = false;
       this.showViewSecondCity = false;
       this.showViewComparison = false;
@@ -167,9 +166,11 @@ export default {
       this.tabs = [this.firstCityName, this.secondCityName, "PORÓWNANIE"];
     },
     changeCity(e, cityType) {
+      console.log("bbbb")
       var chosenCity = e.target.value;
       var url = "";
       var cityInformations = [];
+
       if (cityType == "firstCity") {
         cityInformations = this.getCityInformations(chosenCity);
         this.firstCityLat = cityInformations[0];
@@ -197,15 +198,17 @@ export default {
           break;
         case "3":
           url =
-            "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=50.05456&lng=19.942218&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
+            "https://airapi.airly.eu/v2/measurements/nearest?indexType=AIRLY_CAQI&lat=50.0664&lng=19.9651&maxDistanceKM=1&apikey=91IYoXFWJTxEuGLBOVr60JyFMvSSGN1y";
           break;
         default:
           break;
       }
       if (e.target.id == "selectFirstCity") {
         this.firstCityUrl = url;
+        this.selected = this.firstCityName;
       } else {
         this.secondCityUrl = url;
+        this.selected = this.secondCityName;
       }
     },
     getCityInformations(cityType) {
@@ -575,7 +578,7 @@ body {
     background-color: #f9f2f3;
   }
 }
-s #mapid {
+#mapid {
   width: 100%;
   height: 100%;
 }
@@ -605,3 +608,6 @@ s #mapid {
   padding: 0px !important;
 }
 </style>
+
+
+

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <CurrentData :dayNameOfWeek="this.dayNameOfWeek" :dayDate="this.dayDate" :rate="this.rate"
+        <CurrentData :cityName="this.cityName" :dayNameOfWeek="this.dayNameOfWeek" :dayDate="this.dayDate" :rate="this.rate"
                      :rateValue="this.rateValue" :pm10="this.pm10" :pm25="this.pm25" :pm1="this.pm1"
                      :temperature="this.temperature" :pressure="this.pressure" :humidity="this.humidity"/>
         <div class="informations__row">
@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="informations__row">
-            <div class="row_name">Ekstrema ogólnej jakości powietrza (CAQUI)</div>
+            <div class="row_name">Ekstrema ogólnej jakości powietrza (CAQI)</div>
             <LineChart :height="200" :options="this.chartDataMinMax.options"  :chart-data="this.chartDataMinMax.data"/>
         </div>
         <div class="informations__row">
@@ -58,7 +58,7 @@ import axios from 'axios'
 import moment from 'moment'
 
 export default {
-    name: 'InformationsAirly',
+    name: 'InformationsCity',
     components: {
         CurrentData,
         LineChart,
@@ -107,7 +107,7 @@ export default {
             chartTypePrediction: 3,
         };
     },
-    props: ['url'],
+    props: ['url', 'cityName'],
     watch: { 
         url: function(newVal, oldVal) { 
             let url = newVal;
@@ -216,15 +216,15 @@ export default {
                 false,
                 "chartDataForecast"
             );
-            this.setCurrentDataAirly();
-            this.createGraphHistoricMinMax("gda");
+            this.setCurrentData();
+            this.createGraphHistoricMinMax("first");
         },
         createGraphHistoricMinMax(type){
             const arrMin = arr => Math.min(...arr);
             const arrMax = arr => Math.max(...arr);
             const arrAvg = arr => arr.reduce((a,b) => a + b, 0) / arr.length
             var minCaquiHistory, minCaquiHistoryIndex, maxCaquiHistory, maxCaquiHistoryIndex, avgCaquiHistory, minArray, maxArray, avgArray;
-            if(type == "gda" ){
+            if(type == "first" ){
                 minCaquiHistory = arrMin(this.caqiHistory);
                 minCaquiHistoryIndex = this.caqiHistory.indexOf(minCaquiHistory);
                 maxCaquiHistory = arrMax(this.caqiHistory);
@@ -239,16 +239,16 @@ export default {
                 this.maxArrayFirst[maxCaquiHistoryIndex] = maxCaquiHistory;
                 this.avgArrayFirst = avgArray;
             }
-            else if(type == "gdy" ){
-                minCaquiHistory = arrMin(this.caqiHistoryGdy);
-                minCaquiHistoryIndex = this.caqiHistoryGdy.indexOf(minCaquiHistory);
-                maxCaquiHistory = arrMax(this.caqiHistoryGdy);
-                maxCaquiHistoryIndex = this.caqiHistoryGdy.indexOf(maxCaquiHistory);
-                avgCaquiHistory = arrAvg(this.caqiHistoryGdy).toFixed(2);;
-                minArray = Array(this.caqiHistoryGdy.length).fill(null);    
-                maxArray = Array(this.caqiHistoryGdy.length).fill(null); 
-                avgArray = Array(this.caqiHistoryGdy.length).fill(avgCaquiHistory);
-                this.minArraySecond= Array(this.caqiHistoryGdy.length).fill(null);
+            else if(type == "second" ){
+                minCaquiHistory = arrMin(this.caqiHistory);
+                minCaquiHistoryIndex = this.caqiHistory.indexOf(minCaquiHistory);
+                maxCaquiHistory = arrMax(this.caqiHistory);
+                maxCaquiHistoryIndex = this.caqiHistory.indexOf(maxCaquiHistory);
+                avgCaquiHistory = arrAvg(this.caqiHistory).toFixed(2);;
+                minArray = Array(this.caqiHistory.length).fill(null);    
+                maxArray = Array(this.caqiHistory.length).fill(null); 
+                avgArray = Array(this.caqiHistory.length).fill(avgCaquiHistory);
+                this.minArraySecond= Array(this.caqiHistory.length).fill(null);
                 this.minArraySecond[minCaquiHistoryIndex] = minCaquiHistory;
                 this.maxArraySecond= Array(this.caqiHistory.length).fill(null); 
                 this.maxArraySecond[maxCaquiHistoryIndex] = maxCaquiHistory;
@@ -293,7 +293,7 @@ export default {
             }
             //this.setState({ chartDataMinMaxChanged: true });
         },
-        setCurrentDataAirly(){
+        setCurrentData(){
             var day = moment.utc(this.dataCityCurrent.fromDateTime, "YYYY-MM-DD HH:mm:ss");
             var dayNameOfWeek = day.format('dddd').charAt(0).toUpperCase() + day.format('dddd').slice(1);
             var dayDate = day.format('DD-MM-YYYY');
@@ -438,9 +438,7 @@ export default {
                 }
             }
         },
-        updateChart(){
-            //return (<BarChart :options='this.chartDataHistory.options'  :chart-data="this.chartDataHistory.data"/> );
-        }
+        updateChart(){  }
     },
     mounted: function(){
         let url = this.url; axios.get(url)
